@@ -41,32 +41,66 @@ app.get("/products", (request, response) => {
   });
 });
 
-app.post("/product", (request, response) => {
-  const { productName, category, price } = request.body;
+// app.post("/product", (request, response) => {
+//   const { productName, category, price } = request.body;
 
-  fs.readFile("./data/products.json", "utf-8", (readError, data) => {
-    if (readError) {
-      return response.json({ success: false, error: readError });
+//   fs.readFile("./data/products.json", "utf-8", (readError, data) => {
+//     if (readError) {
+//       return response.json({ success: false, error: readError });
+//     }
+
+//     let dbData = data ? JSON.parse(data) : [];
+//     const newProduct = {
+//       id: Date.now().toString(),
+//       productName,
+//       category,
+//       price,
+//     };
+
+//     dbData.push(newProduct);
+
+//     fs.writeFile("./data/products.json", JSON.stringify(dbData), (error) => {
+//       if (error) {
+//         response.json({ success: false, error });
+//       } else {
+//         response.json({ success: true, product: newProduct });
+//       }
+//     });
+//   });
+// });
+
+app.post("/product", async (request, response) => {
+  const { productName, description, price, image_url } = request.body;
+
+  if (!productName || !description || !price || !image_url) {
+    return response.status(400).json({ error: "All fields are required." });
+  }
+
+  if (isNaN(price) || price <= 0) {
+    return response
+      .status(400)
+      .json({ error: "Price must be a positive number." });
+  }
+
+  try {
+    const sqlResponse = await sql`
+      INSERT INTO products ( name, description, price, image_url)
+      VALUES ( ${productName}, ${description}, ${price}, ${image_url})
+      RETURNING *;`;
+
+    response.json(sqlResponse);
+  } catch (error) {
+    console.error("Error adding product:", error);
+    if (error.code === "23505") {
+      // PostgreSQL unique violation code
+      return response
+        .status(409)
+        .json({ error: "Product with this ID already exists." });
     }
-
-    let dbData = data ? JSON.parse(data) : [];
-    const newProduct = {
-      id: Date.now().toString(),
-      productName,
-      category,
-      price,
-    };
-
-    dbData.push(newProduct);
-
-    fs.writeFile("./data/products.json", JSON.stringify(dbData), (error) => {
-      if (error) {
-        response.json({ success: false, error });
-      } else {
-        response.json({ success: true, product: newProduct });
-      }
-    });
-  });
+    response
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
 });
 
 app.delete("/product", (request, response) => {

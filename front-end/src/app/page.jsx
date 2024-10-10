@@ -23,8 +23,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex justify-center w-full p-6">
-      <div className="max-w-[1200px]">
+    <div className="flex justify-center w-full h-auto p-6 bg-white">
+      <div className="max-w-[1200px] bg-white">
         <div className="flex justify-end">
           <CreateModal setProducts={setProducts} />
         </div>

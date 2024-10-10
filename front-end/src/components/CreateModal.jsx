@@ -2,11 +2,7 @@ import { BACKEND_ENDPOINT } from "@/constant/constant";
 import { useState } from "react";
 
 export const CreateModal = ({ setProducts }) => {
-  const [product, setProduct] = useState({
-    productName: "",
-    category: "",
-    price: "",
-  });
+  const [product, setProduct] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,8 +20,9 @@ export const CreateModal = ({ setProducts }) => {
 
       setProduct({
         productName: "",
-        category: "",
+        description: "",
         price: "",
+        image_url: "",
       });
       document.getElementById("my_modal_1").close();
     } catch (error) {
@@ -54,25 +51,33 @@ export const CreateModal = ({ setProducts }) => {
               name="productName"
               onChange={handleInputChange}
               type="text"
-              placeholder="Type here"
+              placeholder="productName"
               className="w-full input input-bordered"
-              value={product.productName}
+              value={product?.productName}
             />
             <input
-              name="category"
+              name="description"
               onChange={handleInputChange}
               type="text"
-              placeholder="Type here"
+              placeholder="description"
               className="w-full input input-bordered"
-              value={product.category}
+              value={product?.description}
             />
             <input
               name="price"
               onChange={handleInputChange}
               type="text"
-              placeholder="Type here"
+              placeholder="price"
               className="w-full input input-bordered"
-              value={product.price}
+              value={product?.price}
+            />
+            <input
+              name="image_url"
+              onChange={handleInputChange}
+              type="text"
+              placeholder="image_url"
+              className="w-full input input-bordered"
+              value={product?.image_url}
             />
           </div>
           <button className="mt-4 btn" onClick={handleSubmit}>

@@ -7,7 +7,7 @@ export const Card = ({
   setSelectedProduct,
   setProducts,
 }) => {
-  const { productName, category, price } = product;
+  const { productName, description, price, image_url } = product;
 
   const handleDelete = async (id) => {
     try {
@@ -57,17 +57,14 @@ export const Card = ({
   };
 
   return (
-    <div className="shadow-xl card bg-base-100 w-96">
+    <div className="bg-white shadow-xl card w-96">
       <figure>
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt={productName}
-        />
+        <img src={image_url} alt={productName} />
       </figure>
       <div className="card-body">
         <h2 className="card-title">{productName}</h2>
         <div className="flex justify-between">
-          <p>{category}</p>
+          <p>{description}</p>
           <p>{price}$</p>
         </div>
       </div>
@@ -79,9 +76,10 @@ export const Card = ({
           handleSubmit={handleSubmit}
           handleInputChange={handleInputChange}
         />
-        <button onClick={() => handleDelete(product?.id)} className="btn">
+        <button onClick={() => handleDelete(product?.id)} className="btn ">
           Delete
         </button>
+        <input type="" />
       </div>
     </div>
   );
